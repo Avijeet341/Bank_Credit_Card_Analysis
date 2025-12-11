@@ -1,0 +1,20 @@
+{
+	"name": "step11",
+	"properties": {
+		"folder": {
+			"name": "setup for  dedicated sql pool for test  bank data"
+		},
+		"content": {
+			"query": "--------------------------------------------------------------------------------\n-- K. CREATE INDEXES FOR QUERY PERFORMANCE\n--------------------------------------------------------------------------------\nCREATE INDEX idx_customer_income ON BankCredit.dim_customers(income);\nCREATE INDEX idx_customer_state ON BankCredit.dim_customers(state);\nCREATE INDEX idx_customer_city ON BankCredit.dim_customers(city);\nCREATE INDEX idx_loan_status ON BankCredit.fact_loans(loan_status);\nCREATE INDEX idx_loan_purpose ON BankCredit.fact_loans(loan_purpose);\nCREATE INDEX idx_loan_customer ON BankCredit.fact_loans(customer_id);\nCREATE INDEX idx_credit_score ON BankCredit.dim_credit_history(credit_score);\nCREATE INDEX idx_credit_utilization ON BankCredit.dim_credit_history(credit_utilization);\n\nPRINT '✅ Indexes created for performance optimization';\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "kraft100",
+				"poolName": "kraft100"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

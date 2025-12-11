@@ -1,0 +1,20 @@
+{
+	"name": "step14",
+	"properties": {
+		"folder": {
+			"name": "setup for  dedicated sql pool for test  bank data"
+		},
+		"content": {
+			"query": "--Verify Your Data Loaded Successfully\n\n\n-- 1. Check row counts\nSELECT 'dim_customers' AS table_name, COUNT(*) AS row_count FROM BankCredit.dim_customers\nUNION ALL\nSELECT 'fact_loans', COUNT(*) FROM BankCredit.fact_loans\nUNION ALL\nSELECT 'dim_credit_history', COUNT(*) FROM BankCredit.dim_credit_history;\n\n-- Expected: All should show 100 rows\n\n-- 2. Check for any NULL customer_ids (data quality)\nSELECT 'dim_customers' AS table_name, \n       COUNT(*) AS total_rows,\n       SUM(CASE WHEN customer_id IS NULL THEN 1 ELSE 0 END) AS null_ids\nFROM BankCredit.dim_customers\nUNION ALL\nSELECT 'fact_loans', \n       COUNT(*),\n       SUM(CASE WHEN customer_id IS NULL THEN 1 ELSE 0 END)\nFROM BankCredit.fact_loans\nUNION ALL\nSELECT 'dim_credit_history', \n       COUNT(*),\n       SUM(CASE WHEN customer_id IS NULL THEN 1 ELSE 0 END)\nFROM BankCredit.dim_credit_history;\n\n-- Expected: null_ids should be 0 for all\n\n-- 3. Sample data from each table\nSELECT TOP 5 * FROM BankCredit.dim_customers ORDER BY customer_id;\nSELECT TOP 5 * FROM BankCredit.fact_loans ORDER BY loan_id;\nSELECT TOP 5 * FROM BankCredit.dim_credit_history ORDER BY customer_id;\n\n-- 4. Test the 360-degree view\nSELECT TOP 10 * FROM BankCredit.v_customer_360;\n\n-- 5. Check for defaulted loans\nSELECT \n    customer_id,\n    loan_id,\n    loan_amount,\n    loan_status,\n    credit_score,\n    credit_utilization,\n    risk_category,\n    debt_to_income_ratio\nFROM BankCredit.vw_customer_risk_profile\nWHERE loan_status = 'Defaulted';\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "kraft100",
+				"poolName": "kraft100"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

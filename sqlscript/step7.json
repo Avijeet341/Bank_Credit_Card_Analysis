@@ -1,0 +1,20 @@
+{
+	"name": "step7",
+	"properties": {
+		"folder": {
+			"name": "setup for  dedicated sql pool for test  bank data"
+		},
+		"content": {
+			"query": "--------------------------------------------------------------------------------\n-- G.  CREATE EXTERNAL TABLES pointing to files inside the container\n--     Then INSERT into staging tables (this avoids COPY INTO permission issues)\n--------------------------------------------------------------------------------\n-- customers\nCREATE EXTERNAL TABLE external_customers\n(\n    customer_id VARCHAR(500),\n    age VARCHAR(200),\n    gender VARCHAR(200),\n    income VARCHAR(200),\n    employment_status VARCHAR(200),\n    years_employed VARCHAR(200),\n    city VARCHAR(200),\n    state VARCHAR(200)\n)\nWITH (\n    LOCATION = 'customers.csv',\n    DATA_SOURCE = team1_bank_raw_data_adls,\n    FILE_FORMAT = fmt_csv\n);\nGO\n\nINSERT INTO BankCredit.stg_customers\nSELECT * FROM external_customers;\nGO\n\nSELECT 'stg_customers' AS table_name, COUNT(*) AS rows_loaded FROM BankCredit.stg_customers;\nGO\n\n-- loans\nCREATE EXTERNAL TABLE external_loans\n(\n    loan_id VARCHAR(500),\n    customer_id VARCHAR(500),\n    loan_amount VARCHAR(200),\n    loan_purpose VARCHAR(200),\n    loan_term_months VARCHAR(200),\n    interest_rate VARCHAR(200),\n    issue_date VARCHAR(200),\n    loan_status VARCHAR(200)\n)\nWITH (\n    LOCATION = 'loans.csv',\n    DATA_SOURCE = team1_bank_raw_data_adls,\n    FILE_FORMAT = fmt_csv\n);\nGO\n\nINSERT INTO BankCredit.stg_loans\nSELECT * FROM external_loans;\nGO\n\nSELECT 'stg_loans' AS table_name, COUNT(*) AS rows_loaded FROM BankCredit.stg_loans;\nGO\n\n-- credit_history\nCREATE EXTERNAL TABLE external_credit_history\n(\n    customer_id VARCHAR(500),\n    credit_score VARCHAR(200),\n    num_credit_accounts VARCHAR(200),\n    total_credit_limit VARCHAR(200),\n    credit_utilization VARCHAR(200),\n    num_late_payments VARCHAR(200),\n    bankruptcies VARCHAR(200)\n)\nWITH (\n    LOCATION = 'credit_history.csv',\n    DATA_SOURCE = team1_bank_raw_data_adls,\n    FILE_FORMAT = fmt_csv\n);\nGO\n\nINSERT INTO BankCredit.stg_credit_history\nSELECT * FROM external_credit_history;\nGO\n\nSELECT 'stg_credit_history' AS table_name, COUNT(*) AS rows_loaded FROM BankCredit.stg_credit_history;\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "kraft100",
+				"poolName": "kraft100"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

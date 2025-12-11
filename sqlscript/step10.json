@@ -1,0 +1,20 @@
+{
+	"name": "step10",
+	"properties": {
+		"folder": {
+			"name": "setup for  dedicated sql pool for test  bank data"
+		},
+		"content": {
+			"query": "--------------------------------------------------------------------------------\n-- J.  CREATE VIEW for 360-degree customer (optional)\n--------------------------------------------------------------------------------\nIF OBJECT_ID('BankCredit.v_customer_360', 'V') IS NOT NULL\n    DROP VIEW BankCredit.v_customer_360;\nGO\n\nCREATE VIEW BankCredit.v_customer_360\nAS\nSELECT \n    c.customer_id,\n    c.age,\n    c.gender,\n    c.city,\n    c.state,\n    ch.credit_score,\n    ch.total_credit_limit,\n    l.loan_id,\n    l.loan_amount,\n    l.loan_status,\n    l.interest_rate\nFROM BankCredit.dim_customers c\nLEFT JOIN BankCredit.dim_credit_history ch \n    ON c.customer_id = ch.customer_id\nLEFT JOIN BankCredit.fact_loans l\n    ON c.customer_id = l.customer_id;\nGO\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "kraft100",
+				"poolName": "kraft100"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

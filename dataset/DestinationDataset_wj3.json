@@ -1,0 +1,24 @@
+{
+	"name": "DestinationDataset_wj3",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_BlobStorage_Bankprojecf",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "atm_transactions_10k.csv",
+				"container": "raw-bank-data"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}

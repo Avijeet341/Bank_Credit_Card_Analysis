@@ -1,0 +1,20 @@
+{
+	"name": "step2",
+	"properties": {
+		"folder": {
+			"name": "setup for  dedicated sql pool for test  bank data"
+		},
+		"content": {
+			"query": "--------------------------------------------------------------------------------\n-- B.  CREATE FINAL (typed) TABLES (HEAP distribution chosen)\n--------------------------------------------------------------------------------\nCREATE TABLE BankCredit.dim_customers (\n    customer_id VARCHAR(10) NOT NULL,\n    age INT,\n    gender CHAR(1),\n    income DECIMAL(10,2),\n    employment_status VARCHAR(50),\n    years_employed INT,\n    city VARCHAR(50),\n    state VARCHAR(50),\n    created_date DATETIME NULL\n)\nWITH (DISTRIBUTION = REPLICATE, HEAP);\nGO\nPRINT 'dim_customers created';\n\nCREATE TABLE BankCredit.fact_loans (\n    loan_id VARCHAR(20) NOT NULL,\n    customer_id VARCHAR(10) NOT NULL,\n    loan_amount DECIMAL(12,2),\n    loan_purpose VARCHAR(50),\n    loan_term_months INT,\n    interest_rate DECIMAL(5,2),\n    issue_date DATE,\n    loan_status VARCHAR(50),\n    created_date DATETIME NULL\n)\nWITH (DISTRIBUTION = HASH(customer_id), HEAP);\nGO\nPRINT 'fact_loans created';\n\nCREATE TABLE BankCredit.dim_credit_history (\n    customer_id VARCHAR(10) NOT NULL,\n    credit_score INT,\n    num_credit_accounts INT,\n    total_credit_limit DECIMAL(12,2),\n    credit_utilization DECIMAL(5,2),\n    num_late_payments INT,\n    bankruptcies INT,\n    created_date DATETIME NULL\n)\nWITH (DISTRIBUTION = REPLICATE, HEAP);\nGO\nPRINT 'dim_credit_history created';\nGO\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "kraft100",
+				"poolName": "kraft100"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

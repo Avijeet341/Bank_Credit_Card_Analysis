@@ -1,0 +1,17 @@
+{
+	"name": "SQL script 4",
+	"properties": {
+		"content": {
+			"query": "-- A: server & database\nSELECT @@VERSION AS sql_server_version, DB_NAME() AS current_db;\nGO\n\n-- B: external data source exists\nSELECT name, type_desc, location, credential_id\nFROM sys.external_data_sources\nWHERE name = 'bank_raw_data_adls';\nGO\n\n-- C: credential details\nSELECT name, * FROM sys.database_scoped_credentials WHERE name = 'adls_sas_cred';\nGO\n\n-- D: session settings\nSELECT SESSIONPROPERTY('ANSI_NULLS') AS ANSI_NULLS,\n       SESSIONPROPERTY('QUOTED_IDENTIFIER') AS QUOTED_IDENTIFIER,\n       @@SPID AS spid;\nGO\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "kraft100",
+				"poolName": "kraft100"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

@@ -1,0 +1,20 @@
+{
+	"name": "step1",
+	"properties": {
+		"folder": {
+			"name": "setup for  dedicated sql pool for test  bank data"
+		},
+		"content": {
+			"query": "--------------------------------------------------------------------------------\n-- A.  CLEAN START: create schema if needed and drop old objects\n--------------------------------------------------------------------------------\nIF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = 'BankCredit')\nBEGIN\n    EXEC('CREATE SCHEMA BankCredit');\nEND\nGO\n\nPRINT 'Schema BankCredit ensured';\n\n-- drop final tables if exist\nIF OBJECT_ID('BankCredit.dim_credit_history', 'U') IS NOT NULL DROP TABLE BankCredit.dim_credit_history;\nIF OBJECT_ID('BankCredit.fact_loans', 'U') IS NOT NULL DROP TABLE BankCredit.fact_loans;\nIF OBJECT_ID('BankCredit.dim_customers', 'U') IS NOT NULL DROP TABLE BankCredit.dim_customers;\nGO\n\n-- drop staging if present\nIF OBJECT_ID('BankCredit.stg_customers','U') IS NOT NULL DROP TABLE BankCredit.stg_customers;\nIF OBJECT_ID('BankCredit.stg_loans','U') IS NOT NULL DROP TABLE BankCredit.stg_loans;\nIF OBJECT_ID('BankCredit.stg_credit_history','U') IS NOT NULL DROP TABLE BankCredit.stg_credit_history;\nGO\n\n-- drop external tables (if any)\nIF OBJECT_ID('external_customers','U') IS NOT NULL DROP EXTERNAL TABLE external_customers;\nIF OBJECT_ID('external_loans','U') IS NOT NULL DROP EXTERNAL TABLE external_loans;\nIF OBJECT_ID('external_credit_history','U') IS NOT NULL DROP EXTERNAL TABLE external_credit_history;\nGO\n\n-- drop external data source and credential if exist (we will recreate)\nIF EXISTS (SELECT * FROM sys.external_data_sources WHERE name = 'bank_raw_data_adls')\n    DROP EXTERNAL DATA SOURCE bank_raw_data_adls;\nGO\n\nIF EXISTS (SELECT * FROM sys.database_scoped_credentials WHERE name = 'adls_sas_cred')\n    DROP DATABASE SCOPED CREDENTIAL adls_sas_cred;\nGO\n\nPRINT 'Old objects removed (if existed)';\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "kraft100",
+				"poolName": "kraft100"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

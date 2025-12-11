@@ -1,0 +1,20 @@
+{
+	"name": "bank-data-customer-discovery",
+	"properties": {
+		"folder": {
+			"name": "Bank_credit_card_analysis"
+		},
+		"content": {
+			"query": "ALTER DATABASE CURRENT COLLATE Latin1_General_100_CI_AS_SC_UTF8;\n\n\n\nSELECT TOP 100 *\nFROM OPENROWSET(\n        BULK 'abfss://bank-raw-data@kraftsynapse.dfs.core.windows.net/customers.csv',\n        FORMAT = 'CSV',\n        PARSER_VERSION = '2.0',\n        FIELDTERMINATOR = ',',\n        ROWTERMINATOR = '\\n',\n        HEADER_ROW = TRUE\n    )\nWITH (\n        customer_id VARCHAR(10),  \n        age INT,\n        gender CHAR(1),                   \n        income DECIMAL(10,2),\n        employment_status VARCHAR(20),\n        years_employed INT,\n        city VARCHAR(50),\n        state VARCHAR(50)\n    ) AS result;\n\n\n\n    \n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "bank-discovery-ssqlp",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

@@ -1,0 +1,20 @@
+{
+	"name": "step5",
+	"properties": {
+		"folder": {
+			"name": "setup for  dedicated sql pool for test  bank data"
+		},
+		"content": {
+			"query": "--------------------------------------------------------------------------------\n-- E.  CREATE DATABASE SCOPED CREDENTIAL and EXTERNAL DATA SOURCE (SAS)\n--     Replace <YOUR_SAS_TOKEN_WITHOUT_QUESTIONMARK> with the SAS token string (no leading ?)\n--------------------------------------------------------------------------------\nCREATE DATABASE SCOPED CREDENTIAL adls_sas_cred\nWITH IDENTITY = 'SHARED ACCESS SIGNATURE',\nSECRET = 'sp=r&st=2025-12-11T15:32:14Z&se=2025-12-11T23:47:14Z&spr=https&sv=2024-11-04&sr=c&sig=jlAKX7rPuynOUCmG1kl7ogqKhswts1HHR7mim5%2FC4aE%3D';\nGO\n\nCREATE EXTERNAL DATA SOURCE team1_bank_raw_data_adls\nWITH (\n    TYPE = HADOOP,\n    LOCATION = 'abfss://test1-bank-data-raw@kraftsynapse.dfs.core.windows.net/',\n    CREDENTIAL = adls_sas_cred\n);\nGO\n\nPRINT 'External data source and credential created';\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "kraft100",
+				"poolName": "kraft100"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

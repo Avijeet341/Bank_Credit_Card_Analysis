@@ -1,0 +1,17 @@
+{
+	"name": "msterkeycreation",
+	"properties": {
+		"content": {
+			"query": "-- 1) Create a Database Master Key if it does not already exist\n-- Replace the password with a strong password (at least 12 chars with letters, numbers, symbols)\nIF NOT EXISTS (SELECT * FROM sys.symmetric_keys WHERE name = '##MS_DatabaseMasterKey##')\nBEGIN\n    CREATE MASTER KEY ENCRYPTION BY PASSWORD = 'avi@21Priyanka';\n    PRINT 'Database Master Key created';\nEND\nELSE\nBEGIN\n    PRINT 'Database Master Key already exists';\nEND\nGO\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "kraft100",
+				"poolName": "kraft100"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

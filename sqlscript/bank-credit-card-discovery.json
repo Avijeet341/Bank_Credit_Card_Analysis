@@ -1,0 +1,20 @@
+{
+	"name": "bank-credit-card-discovery",
+	"properties": {
+		"folder": {
+			"name": "Bank_credit_card_analysis"
+		},
+		"content": {
+			"query": "SELECT TOP 100 *\nFROM OPENROWSET(\n        BULK 'abfss://bank-raw-data@kraftsynapse.dfs.core.windows.net/credit_history.csv',\n        FORMAT = 'CSV',\n        PARSER_VERSION = '2.0',\n        FIELDTERMINATOR = ',',\n        ROWTERMINATOR = '\\n',\n        HEADER_ROW = TRUE\n)\nWITH (\n    customer_id VARCHAR(10),\n    credit_score INT,\n    num_credit_accounts INT,\n    total_credit_limit DECIMAL(12,2),\n    credit_utilization DECIMAL(5,2),\n    num_late_payments INT,\n    bankruptcies INT\n) AS result;\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "master",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

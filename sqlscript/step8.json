@@ -1,0 +1,20 @@
+{
+	"name": "step8",
+	"properties": {
+		"folder": {
+			"name": "setup for  dedicated sql pool for test  bank data"
+		},
+		"content": {
+			"query": "--------------------------------------------------------------------------------\n-- H.  TRANSFORM & LOAD: move from staging (VARCHAR) -> typed final tables\n--------------------------------------------------------------------------------\n-- customers -> dim_customers\nINSERT INTO BankCredit.dim_customers\n(customer_id, age, gender, income, employment_status, years_employed, city, state, created_date)\nSELECT\n    LTRIM(RTRIM(customer_id)),\n    TRY_CAST(age AS INT),\n    LTRIM(RTRIM(gender)),\n    TRY_CAST(REPLACE(REPLACE(income, '\"', ''), ',', '') AS DECIMAL(10,2)),\n    LTRIM(RTRIM(employment_status)),\n    TRY_CAST(years_employed AS INT),\n    LTRIM(RTRIM(city)),\n    LTRIM(RTRIM(state)),\n    GETDATE()\nFROM BankCredit.stg_customers;\nGO\n\n-- loans -> fact_loans\nINSERT INTO BankCredit.fact_loans\n(loan_id, customer_id, loan_amount, loan_purpose, loan_term_months, interest_rate, issue_date, loan_status, created_date)\nSELECT\n    LTRIM(RTRIM(loan_id)),\n    LTRIM(RTRIM(customer_id)),\n    TRY_CAST(REPLACE(REPLACE(loan_amount, '\"', ''), ',', '') AS DECIMAL(12,2)),\n    LTRIM(RTRIM(loan_purpose)),\n    TRY_CAST(loan_term_months AS INT),\n    TRY_CAST(interest_rate AS DECIMAL(5,2)),\n    TRY_CAST(issue_date AS DATE),\n    LTRIM(RTRIM(loan_status)),\n    GETDATE()\nFROM BankCredit.stg_loans;\nGO\n\n-- credit_history -> dim_credit_history\nINSERT INTO BankCredit.dim_credit_history\n(customer_id, credit_score, num_credit_accounts, total_credit_limit, credit_utilization, num_late_payments, bankruptcies, created_date)\nSELECT\n    LTRIM(RTRIM(customer_id)),\n    TRY_CAST(credit_score AS INT),\n    TRY_CAST(num_credit_accounts AS INT),\n    TRY_CAST(REPLACE(REPLACE(total_credit_limit, '\"', ''), ',', '') AS DECIMAL(12,2)),\n    TRY_CAST(credit_utilization AS DECIMAL(5,2)),\n    TRY_CAST(num_late_payments AS INT),\n    TRY_CAST(bankruptcies AS INT),\n    GETDATE()\nFROM BankCredit.stg_credit_history;\nGO\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "kraft100",
+				"poolName": "kraft100"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

@@ -1,0 +1,20 @@
+{
+	"name": "bank-loan-dicovery",
+	"properties": {
+		"folder": {
+			"name": "Bank_credit_card_analysis"
+		},
+		"content": {
+			"query": "SELECT TOP 100 *\nFROM OPENROWSET(\n    BULK 'abfss://bank-raw-data@kraftsynapse.dfs.core.windows.net/loans.csv',\n    FORMAT = 'CSV',\n    PARSER_VERSION = '2.0',\n    FIELDTERMINATOR = ',',\n    ROWTERMINATOR = '\\n',\n    HEADER_ROW = TRUE\n)\nWITH (\n    loan_id VARCHAR(10),\n    customer_id VARCHAR(10),\n    loan_amount DECIMAL(12,2),\n    loan_purpose VARCHAR(20),\n    loan_term_months INT,\n    interest_rate DECIMAL(5,2),\n    issue_date DATE,\n    loan_status VARCHAR(20)\n) AS result;\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "bank-discovery-ssqlp",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

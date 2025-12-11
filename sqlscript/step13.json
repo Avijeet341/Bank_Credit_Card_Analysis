@@ -1,0 +1,20 @@
+{
+	"name": "step13",
+	"properties": {
+		"folder": {
+			"name": "setup for  dedicated sql pool for test  bank data"
+		},
+		"content": {
+			"query": "--------------------------------------------------------------------------------\n-- M. CREATE ANALYTICAL VIEWS FOR BUSINESS INSIGHTS\n--------------------------------------------------------------------------------\n\n-- View 1: Customer Risk Profile with Calculations\nCREATE VIEW BankCredit.vw_customer_risk_profile AS\nSELECT \n    c.customer_id,\n    c.age,\n    c.gender,\n    c.income,\n    c.employment_status,\n    c.years_employed,\n    c.city,\n    c.state,\n    l.loan_id,\n    l.loan_amount,\n    l.loan_purpose,\n    l.loan_term_months,\n    l.interest_rate,\n    l.issue_date,\n    l.loan_status,\n    ch.credit_score,\n    ch.num_credit_accounts,\n    ch.total_credit_limit,\n    ch.credit_utilization,\n    ch.num_late_payments,\n    ch.bankruptcies,\n    \n    -- Calculated Risk Metrics\n    CAST(l.loan_amount AS FLOAT) / NULLIF(c.income, 0) AS debt_to_income_ratio,\n    \n    -- Risk Categorization\n    CASE \n        WHEN ch.credit_score >= 750 AND ch.num_late_payments = 0 AND ch.credit_utilization < 30 \n            THEN 'Low Risk'\n        WHEN ch.credit_score >= 650 AND ch.num_late_payments <= 2 AND ch.credit_utilization < 60 \n            THEN 'Medium Risk'\n        ELSE 'High Risk'\n    END AS risk_category,\n    \n    -- Age Segmentation\n    CASE \n        WHEN c.age < 30 THEN 'Young (< 30)'\n        WHEN c.age BETWEEN 30 AND 40 THEN 'Mid (30-40)'\n        WHEN c.age BETWEEN 40 AND 50 THEN 'Mature (40-50)'\n        ELSE 'Senior (50+)'\n    END AS age_group,\n    \n    -- Income Bracket\n    CASE \n        WHEN c.income < 50000 THEN 'Low (< 50K)'\n        WHEN c.income BETWEEN 50000 AND 75000 THEN 'Medium (50-75K)'\n        WHEN c.income BETWEEN 75000 AND 100000 THEN 'High (75-100K)'\n        ELSE 'Very High (100K+)'\n    END AS income_bracket\n\nFROM BankCredit.dim_customers c\nINNER JOIN BankCredit.fact_loans l ON c.customer_id = l.customer_id\nINNER JOIN BankCredit.dim_credit_history ch ON c.customer_id = ch.customer_id;\nGO\n\nPRINT '✅ Analytical views created';\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "kraft100",
+				"poolName": "kraft100"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

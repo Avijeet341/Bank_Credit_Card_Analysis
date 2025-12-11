@@ -1,0 +1,20 @@
+{
+	"name": "step9",
+	"properties": {
+		"folder": {
+			"name": "setup for  dedicated sql pool for test  bank data"
+		},
+		"content": {
+			"query": "--------------------------------------------------------------------------------\n-- I.  OPTIONAL: update created_date for all existing rows (safe idempotent)\n--------------------------------------------------------------------------------\nUPDATE BankCredit.dim_customers SET created_date = GETDATE();\nUPDATE BankCredit.fact_loans SET created_date = GETDATE();\nUPDATE BankCredit.dim_credit_history SET created_date = GETDATE();\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "kraft100",
+				"poolName": "kraft100"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

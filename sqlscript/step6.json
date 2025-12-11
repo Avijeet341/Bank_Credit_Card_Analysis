@@ -1,0 +1,20 @@
+{
+	"name": "step6",
+	"properties": {
+		"folder": {
+			"name": "setup for  dedicated sql pool for test  bank data"
+		},
+		"content": {
+			"query": "--------------------------------------------------------------------------------\n-- F.  EXTERNAL FILE FORMAT (CSV) - run once\n--------------------------------------------------------------------------------\nIF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'fmt_csv')\nBEGIN\n    CREATE EXTERNAL FILE FORMAT fmt_csv\n    WITH (\n        FORMAT_TYPE = DELIMITEDTEXT,\n        FORMAT_OPTIONS (FIELD_TERMINATOR = ',', STRING_DELIMITER = '\"', FIRST_ROW = 2)\n    );\n    PRINT 'External file format fmt_csv created';\nEND\nELSE\n    PRINT 'External file format fmt_csv already exists';\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "kraft100",
+				"poolName": "kraft100"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

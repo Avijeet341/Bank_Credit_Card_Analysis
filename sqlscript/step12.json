@@ -1,0 +1,20 @@
+{
+	"name": "step12",
+	"properties": {
+		"folder": {
+			"name": "setup for  dedicated sql pool for test  bank data"
+		},
+		"content": {
+			"query": "--------------------------------------------------------------------------------\n-- L.  VERIFY counts & sample\n--------------------------------------------------------------------------------\nSELECT 'dim_customers' AS table_name, COUNT(*) FROM BankCredit.dim_customers;\nSELECT 'fact_loans' AS table_name, COUNT(*) FROM BankCredit.fact_loans;\nSELECT 'dim_credit_history' AS table_name, COUNT(*) FROM BankCredit.dim_credit_history;\nGO\n\nSELECT TOP (10) * FROM BankCredit.v_customer_360;\nGO\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "kraft100",
+				"poolName": "kraft100"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

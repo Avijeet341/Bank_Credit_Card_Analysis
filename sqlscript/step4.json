@@ -1,0 +1,20 @@
+{
+	"name": "step4",
+	"properties": {
+		"folder": {
+			"name": "setup for  dedicated sql pool for test  bank data"
+		},
+		"content": {
+			"query": "--------------------------------------------------------------------------------\n-- D.  MASTER KEY + OPEN (required for DB SCOPED CREDENTIAL)\n--     Create master key once, then open in session for credential creation.\n--------------------------------------------------------------------------------\n-- 1) create master key if not exists (run as db_owner)\nIF NOT EXISTS (SELECT * FROM sys.symmetric_keys WHERE name = '##MS_DatabaseMasterKey##')\nBEGIN\n    -- << replace password with a strong one >>\n    CREATE MASTER KEY ENCRYPTION BY PASSWORD = 'avi@21Priyanka';\n    PRINT 'Database Master Key created';\nEND\nELSE\n    PRINT 'Database Master Key already exists';\nGO\n\n-- 2) open master key in this session (session-scoped)\nOPEN MASTER KEY DECRYPTION BY PASSWORD = 'avi@21Priyanka';\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "kraft100",
+				"poolName": "kraft100"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

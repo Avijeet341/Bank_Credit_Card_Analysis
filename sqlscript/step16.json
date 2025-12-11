@@ -1,0 +1,20 @@
+{
+	"name": "step16",
+	"properties": {
+		"folder": {
+			"name": "setup for  dedicated sql pool for test  bank data"
+		},
+		"content": {
+			"query": "---Run Business Analytics Queries:\n\n-- Query 1: Default Rate by Loan Purpose\nSELECT \n    loan_purpose,\n    COUNT(*) AS total_loans,\n    SUM(CASE WHEN loan_status = 'Defaulted' THEN 1 ELSE 0 END) AS defaulted_loans,\n    ROUND(\n        CAST(SUM(CASE WHEN loan_status = 'Defaulted' THEN 1 ELSE 0 END) AS FLOAT) / \n        COUNT(*) * 100, \n        2\n    ) AS default_rate_percent\nFROM BankCredit.fact_loans\nGROUP BY loan_purpose\nORDER BY default_rate_percent DESC;\n\n-- Query 2: Risk Distribution\nSELECT \n    risk_category,\n    COUNT(*) AS customer_count,\n    AVG(credit_score) AS avg_credit_score,\n    AVG(loan_amount) AS avg_loan_amount,\n    SUM(CASE WHEN loan_status = 'Defaulted' THEN 1 ELSE 0 END) AS defaults\nFROM BankCredit.vw_customer_risk_profile\nGROUP BY risk_category\nORDER BY \n    CASE risk_category \n        WHEN 'Low Risk' THEN 1 \n        WHEN 'Medium Risk' THEN 2 \n        ELSE 3 \n    END;\n\n-- Query 3: Top 10 High-Risk Customers\nSELECT TOP 10\n    customer_id,\n    age,\n    income,\n    loan_amount,\n    credit_score,\n    credit_utilization,\n    num_late_payments,\n    risk_category\nFROM BankCredit.vw_customer_risk_profile\nWHERE risk_category = 'High Risk'\nORDER BY credit_score ASC, credit_utilization DESC;",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "kraft100",
+				"poolName": "kraft100"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

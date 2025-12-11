@@ -1,0 +1,20 @@
+{
+	"name": "step3",
+	"properties": {
+		"folder": {
+			"name": "setup for  dedicated sql pool for test  bank data"
+		},
+		"content": {
+			"query": "--------------------------------------------------------------------------------\n-- C.  CREATE STAGING TABLES (all VARCHAR to avoid parse issues)\n--------------------------------------------------------------------------------\nCREATE TABLE BankCredit.stg_customers (\n    customer_id VARCHAR(500),\n    age VARCHAR(200),\n    gender VARCHAR(50),\n    income VARCHAR(200),\n    employment_status VARCHAR(200),\n    years_employed VARCHAR(200),\n    city VARCHAR(200),\n    state VARCHAR(200)\n) WITH (DISTRIBUTION = REPLICATE, HEAP);\nGO\n\nCREATE TABLE BankCredit.stg_loans (\n    loan_id VARCHAR(500),\n    customer_id VARCHAR(500),\n    loan_amount VARCHAR(200),\n    loan_purpose VARCHAR(200),\n    loan_term_months VARCHAR(200),\n    interest_rate VARCHAR(200),\n    issue_date VARCHAR(200),\n    loan_status VARCHAR(200)\n) WITH (DISTRIBUTION = HASH(customer_id), HEAP);\nGO\n\nCREATE TABLE BankCredit.stg_credit_history (\n    customer_id VARCHAR(500),\n    credit_score VARCHAR(200),\n    num_credit_accounts VARCHAR(200),\n    total_credit_limit VARCHAR(200),\n    credit_utilization VARCHAR(200),\n    num_late_payments VARCHAR(200),\n    bankruptcies VARCHAR(200)\n) WITH (DISTRIBUTION = REPLICATE, HEAP);\nGO\n\nPRINT 'Staging tables created';\nGO\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "kraft100",
+				"poolName": "kraft100"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
